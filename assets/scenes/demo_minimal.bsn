@@ -1,0 +1,11 @@
+// Minimal experimental .bsn (first-party loader subset)
+bsn_list! {
+    #LeftCube
+    Transform::from_xyz(-1.5, 0.5, 0.0)
+    --
+    #RightCube
+    Transform::from_xyz(1.5, 0.5, 0.0)
+    --
+    #CenterCube
+    Transform::from_xyz(0.0, 0.5, -1.5)
+}

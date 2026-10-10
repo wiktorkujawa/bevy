@@ -851,8 +851,9 @@
 //!
 //! ## .bsn Asset Format
 //!
-//! Bevy does not currently have support for `.bsn` files,
-//! but intends to offer a `.bsn` asset format in future releases.
+//! Bevy now ships an experimental [`BsnSource`] / [`BsnAssetLoader`] for `.bsn` text
+//! (minimal `#Name` + `Transform::from_xyz` subset via [`parse_minimal_bsn`]).
+//! Full syntactic parity with `bsn!` (and `ScenePatch` production from files) is still in progress.
 //!
 //! This would allow you to define your scenes on disk,
 //! creating/modifying them in various authoring tools and using asset hot-reloading.
@@ -900,6 +901,7 @@ pub mod macro_utils;
 
 extern crate alloc;
 
+mod bsn_asset;
 mod resolved_scene;
 mod scene;
 mod scene_component;
@@ -908,6 +910,7 @@ mod scene_patch;
 mod spawn;
 mod spawn_system;
 
+pub use bsn_asset::*;
 pub use resolved_scene::*;
 pub use scene::*;
 pub use scene_component::*;
@@ -935,15 +938,16 @@ impl Plugin for ScenePlugin {
         app.init_resource::<QueuedScenes>()
             .init_resource::<WaitingScenes>()
             .init_asset::<ScenePatch>()
-            .init_asset::<SceneListPatch>()
-            .add_systems(
-                SpawnScene,
-                (resolve_scene_patches, spawn_queued)
-                    .chain()
-                    .in_set(SceneSpawnerSystems::SceneSpawn)
-                    .after(SceneSpawnerSystems::WorldInstanceSpawn),
-            )
-            .add_observer(on_add_scene_patch_instance);
+            .init_asset::<SceneListPatch>();
+        register_bsn_asset(app);
+        app.add_systems(
+            SpawnScene,
+            (resolve_scene_patches, spawn_queued)
+                .chain()
+                .in_set(SceneSpawnerSystems::SceneSpawn)
+                .after(SceneSpawnerSystems::WorldInstanceSpawn),
+        )
+        .add_observer(on_add_scene_patch_instance);
     }
 }
 

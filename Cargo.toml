@@ -3211,6 +3211,17 @@ description = "Demonstrates how to use BSN to compose scenes"
 category = "Scene"
 wasm = true
 
+[[example]]
+name = "bsn_asset"
+path = "examples/scene/bsn_asset.rs"
+doc-scrape-examples = true
+
+[package.metadata.example.bsn_asset]
+name = "BSN asset (.bsn) example"
+description = "Loads an experimental .bsn file via BsnSource / BsnAssetLoader"
+category = "Scene"
+wasm = false
+
 # Shaders
 [[package.metadata.example_category]]
 name = "Shaders"
